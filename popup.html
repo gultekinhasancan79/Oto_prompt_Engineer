@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Enhancer</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      width: 340px;
+      min-height: 280px;
+      font-family: 'JetBrains Mono', monospace;
+      background: linear-gradient(145deg, #0d0d0d 0%, #1a1a2e 50%, #16213e 100%);
+      color: #e0e0e0;
+      padding: 0;
+      overflow: hidden;
+    }
+    
+    .container {
+      padding: 24px;
+      position: relative;
+    }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #ff6b6b, #feca57, #48dbfb, #ff9ff3, #ff6b6b);
+      background-size: 200% 100%;
+      animation: gradient-shift 3s ease infinite;
+    }
+    
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .logo {
+      font-size: 32px;
+      animation: sparkle 2s ease-in-out infinite;
+    }
+    
+    @keyframes sparkle {
+      0%, 100% { transform: scale(1) rotate(0deg); }
+      25% { transform: scale(1.1) rotate(-5deg); }
+      50% { transform: scale(1) rotate(0deg); }
+      75% { transform: scale(1.1) rotate(5deg); }
+    }
+    
+    .title {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #48dbfb, #ff9ff3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .subtitle {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    label {
+      display: block;
+      font-size: 11px;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 10px;
+    }
+    
+    .input-wrapper {
+      position: relative;
+    }
+    
+    .input-wrapper::before {
+      content: '🔑';
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 14px;
+      z-index: 1;
+    }
+    
+    input[type="password"],
+    input[type="text"] {
+      width: 100%;
+      padding: 14px 14px 14px 44px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      color: #e0e0e0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+    
+    input:focus {
+      border-color: #48dbfb;
+      background: rgba(72, 219, 251, 0.05);
+      box-shadow: 0 0 20px rgba(72, 219, 251, 0.15);
+    }
+    
+    input::placeholder {
+      color: #444;
+    }
+    
+    .toggle-visibility {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 14px;
+      padding: 4px;
+      transition: color 0.2s ease;
+    }
+    
+    .toggle-visibility:hover {
+      color: #48dbfb;
+    }
+    
+    .btn-save {
+      width: 100%;
+      padding: 14px 24px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-save::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-save:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .btn-save:hover::before {
+      left: 100%;
+    }
+    
+    .btn-save:active {
+      transform: translateY(0);
+    }
+    
+    .btn-save:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .btn-save.locked {
+      background: linear-gradient(135deg, #2ed573 0%, #26de81 100%);
+      cursor: default;
+    }
+    
+    .btn-save.locked:hover {
+      transform: none;
+      box-shadow: none;
+    }
+    
+    .btn-change {
+      width: 100%;
+      padding: 10px 20px;
+      margin-top: 10px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      display: none;
+    }
+    
+    .btn-change:hover {
+      border-color: #ff6b6b;
+      color: #ff6b6b;
+      background: rgba(255, 107, 107, 0.1);
+    }
+    
+    .btn-change.show {
+      display: block;
+    }
+    
+    input:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .message {
+      margin-top: 16px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 12px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(-10px);
+      transition: all 0.3s ease;
+    }
+    
+    .message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .message.success {
+      background: rgba(46, 213, 115, 0.15);
+      border: 1px solid rgba(46, 213, 115, 0.3);
+      color: #2ed573;
+    }
+    
+    .message.error {
+      background: rgba(255, 107, 107, 0.15);
+      border: 1px solid rgba(255, 107, 107, 0.3);
+      color: #ff6b6b;
+    }
+    
+    .message.info {
+      background: rgba(72, 219, 251, 0.15);
+      border: 1px solid rgba(72, 219, 251, 0.3);
+      color: #48dbfb;
+    }
+    
+    .footer {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      text-align: center;
+    }
+    
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: 11px;
+      color: #666;
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #ff6b6b;
+      transition: background 0.3s ease;
+    }
+    
+    .status-dot.active {
+      background: #2ed573;
+      box-shadow: 0 0 10px rgba(46, 213, 115, 0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    
+    .hint {
+      margin-top: 12px;
+      font-size: 10px;
+      color: #555;
+      text-align: center;
+      line-height: 1.6;
+    }
+    
+    .hint a {
+      color: #48dbfb;
+      text-decoration: none;
+    }
+    
+    .hint a:hover {
+      text-decoration: underline;
+    }
+    
+    .language-selector {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .lang-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      color: #888;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .lang-btn:hover {
+      border-color: rgba(255, 255, 255, 0.2);
+      color: #e0e0e0;
+    }
+    
+    .lang-btn.active {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+      border-color: #667eea;
+      color: #e0e0e0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <span class="logo">✨</span>
+      <div>
+        <div class="title">Prompt Enhancer</div>
+        <div class="subtitle">Powered by Groq</div>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="apiKey">Groq API Key</label>
+      <div class="input-wrapper">
+        <input 
+          type="password" 
+          id="apiKey" 
+          placeholder="Enter your API key..."
+          autocomplete="off"
+        >
+        <button type="button" class="toggle-visibility" id="toggleVisibility">👁</button>
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label>Çıktı Dili</label>
+      <div class="language-selector">
+        <button type="button" class="lang-btn active" id="langTR" data-lang="tr">
+          🇹🇷 Türkçe
+        </button>
+        <button type="button" class="lang-btn" id="langEN" data-lang="en">
+          🇬🇧 English
+        </button>
+      </div>
+    </div>
+    
+    <button class="btn-save" id="saveBtn">Kaydet</button>
+    <button class="btn-change" id="changeBtn">🔓 API Key Değiştir</button>
+    
+    <div class="message" id="message"></div>
+    
+    <div class="footer">
+      <div class="status">
+        <span class="status-dot" id="statusDot"></span>
+        <span id="statusText">API Key not configured</span>
+      </div>
+      <p class="hint">
+        API key al:<br>
+        <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a>
+      </p>
+    </div>
+  </div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

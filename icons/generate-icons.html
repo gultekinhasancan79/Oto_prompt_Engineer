@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Prompt Enhancer - Icon Generator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: #1a1a2e;
+      color: white;
+      padding: 40px;
+      text-align: center;
+      margin: 0;
+    }
+    h1 { 
+      color: #48dbfb; 
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .subtitle {
+      color: #888;
+      margin-bottom: 30px;
+    }
+    .icons-container {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      margin: 40px 0;
+    }
+    .icon-card {
+      background: #16213e;
+      padding: 25px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+    .icon-card canvas {
+      border: 2px solid #333;
+      border-radius: 8px;
+      background: #0d0d0d;
+    }
+    .icon-card .size {
+      color: #888;
+      font-size: 14px;
+    }
+    .btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      transition: transform 0.2s, opacity 0.2s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn:hover {
+      opacity: 0.9;
+      transform: scale(1.05);
+    }
+    .btn-large {
+      padding: 16px 40px;
+      font-size: 18px;
+      margin: 20px 0;
+    }
+    .btn-green {
+      background: linear-gradient(135deg, #2ed573, #26de81);
+    }
+    .download-step {
+      background: #16213e;
+      padding: 30px;
+      border-radius: 16px;
+      max-width: 400px;
+      margin: 30px auto;
+    }
+    .download-step h3 {
+      color: #feca57;
+      margin-top: 0;
+    }
+    .step-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .step-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0d0d0d;
+      padding: 15px 20px;
+      border-radius: 10px;
+      border: 2px solid #333;
+    }
+    .step-btn.done {
+      border-color: #2ed573;
+      background: rgba(46, 213, 115, 0.1);
+    }
+    .step-btn span {
+      font-size: 16px;
+    }
+    .check {
+      color: #2ed573;
+      font-size: 20px;
+      display: none;
+    }
+    .step-btn.done .check {
+      display: inline;
+    }
+    .step-btn.done .btn {
+      background: #2ed573;
+      pointer-events: none;
+    }
+    .instructions {
+      background: #16213e;
+      padding: 25px;
+      border-radius: 16px;
+      max-width: 500px;
+      margin: 30px auto;
+      text-align: left;
+    }
+    .instructions h3 {
+      color: #48dbfb;
+      margin-top: 0;
+    }
+    .instructions ol {
+      padding-left: 20px;
+      line-height: 1.8;
+    }
+    .instructions code {
+      background: #0d0d0d;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #feca57;
+    }
+    .all-done {
+      background: rgba(46, 213, 115, 0.2);
+      color: #2ed573;
+      padding: 20px;
+      border-radius: 10px;
+      margin-top: 20px;
+      display: none;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    .all-done.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>✨ Prompt Enhancer</h1>
+  <p class="subtitle">Icon Generator - Her ikonu teker teker indir</p>
+  
+  <div class="icons-container">
+    <div class="icon-card">
+      <canvas id="c16" width="16" height="16"></canvas>
+      <span class="size">16x16</span>
+    </div>
+    <div class="icon-card">
+      <canvas id="c48" width="48" height="48"></canvas>
+      <span class="size">48x48</span>
+    </div>
+    <div class="icon-card">
+      <canvas id="c128" width="128" height="128"></canvas>
+      <span class="size">128x128</span>
+    </div>
+  </div>
+  
+  <div class="download-step">
+    <h3>📥 İkonları İndir (Teker Teker)</h3>
+    <p style="color: #888; font-size: 14px;">Her butona tıklayarak ikonları indir</p>
+    
+    <div class="step-buttons">
+      <div class="step-btn" id="step16">
+        <span>icon16.png</span>
+        <span class="check">✓</span>
+        <button class="btn" onclick="downloadAndMark(16)">İndir</button>
+      </div>
+      <div class="step-btn" id="step48">
+        <span>icon48.png</span>
+        <span class="check">✓</span>
+        <button class="btn" onclick="downloadAndMark(48)">İndir</button>
+      </div>
+      <div class="step-btn" id="step128">
+        <span>icon128.png</span>
+        <span class="check">✓</span>
+        <button class="btn" onclick="downloadAndMark(128)">İndir</button>
+      </div>
+    </div>
+    
+    <div class="all-done" id="allDone">
+      ✅ Tüm ikonlar indirildi!
+    </div>
+  </div>
+  
+  <div class="instructions">
+    <h3>📋 Sonraki Adımlar:</h3>
+    <ol>
+      <li>İndirilen 3 PNG dosyasını bul (İndirilenler klasörü)</li>
+      <li>Dosyaları <code>icons</code> klasörüne taşı</li>
+      <li>Chrome'da <code>chrome://extensions</code> aç</li>
+      <li>Prompt Enhancer'ı yeniden yükle (🔄 butonu)</li>
+    </ol>
+  </div>
+
+  <script>
+    var downloaded = { 16: false, 48: false, 128: false };
+    
+    window.onload = function() {
+      createIcon(16);
+      createIcon(48);
+      createIcon(128);
+    };
+    
+    function createIcon(size) {
+      var canvas = document.getElementById('c' + size);
+      var ctx = canvas.getContext('2d');
+      
+      var grad = ctx.createLinearGradient(0, 0, size, size);
+      grad.addColorStop(0, '#667eea');
+      grad.addColorStop(1, '#764ba2');
+      
+      var r = size * 0.2;
+      ctx.beginPath();
+      ctx.moveTo(r, 0);
+      ctx.lineTo(size - r, 0);
+      ctx.quadraticCurveTo(size, 0, size, r);
+      ctx.lineTo(size, size - r);
+      ctx.quadraticCurveTo(size, size, size - r, size);
+      ctx.lineTo(r, size);
+      ctx.quadraticCurveTo(0, size, 0, size - r);
+      ctx.lineTo(0, r);
+      ctx.quadraticCurveTo(0, 0, r, 0);
+      ctx.closePath();
+      ctx.fillStyle = grad;
+      ctx.fill();
+      
+      ctx.font = (size * 0.5) + 'px serif';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✨', size / 2, size / 2);
+    }
+    
+    function downloadAndMark(size) {
+      var canvas = document.getElementById('c' + size);
+      var link = document.createElement('a');
+      link.download = 'icon' + size + '.png';
+      link.href = canvas.toDataURL('image/png');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // İndirildi olarak işaretle
+      downloaded[size] = true;
+      document.getElementById('step' + size).classList.add('done');
+      
+      // Hepsi indirildiyse mesaj göster
+      if (downloaded[16] && downloaded[48] && downloaded[128]) {
+        document.getElementById('allDone').classList.add('show');
+      }
+    }
+  </script>
+</body>
+</html>
