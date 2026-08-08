@@ -28,6 +28,10 @@ jobs:
           node --check background.js
           node --check content.js
           node --check popup.js
+          node --check tests/background_pipeline.test.js
+
+      - name: Run prompt pipeline unit tests
+        run: node --test tests/background_pipeline.test.js
 
       - name: Validate extension manifest
         run: python -m json.tool manifest.json > /dev/null
