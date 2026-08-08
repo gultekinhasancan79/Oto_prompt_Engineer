@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  extension-smoke-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Validate JavaScript syntax
+        run: |
+          node --check background.js
+          node --check content.js
+          node --check popup.js
+
+      - name: Validate extension manifest
+        run: python -m json.tool manifest.json > /dev/null
+
+      - name: Verify manifest-referenced files
+        run: |
+          test -f background.js
+          test -f content.js
+          test -f styles.css
+          test -f popup.html
+          test -f icons/icon16.png
+          test -f icons/icon48.png
+          test -f icons/icon128.png
