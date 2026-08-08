@@ -32,6 +32,30 @@ jobs:
       - name: Validate extension manifest
         run: python -m json.tool manifest.json > /dev/null
 
+      - name: Reject duplicate manifest keys
+        run: |
+          python - <<'PY'
+          import json
+
+          def reject_duplicates(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise ValueError(f"duplicate key in manifest.json: {key}")
+                  result[key] = value
+              return result
+
+          with open("manifest.json", "r", encoding="utf-8") as handle:
+              json.load(handle, object_pairs_hook=reject_duplicates)
+          PY
+
+      - name: Guard against committed Groq secrets
+        run: |
+          if grep -RInE --exclude-dir=.git --exclude=README.md --exclude=SECURITY.md 'gsk_[A-Za-z0-9_-]{20,}' .; then
+            echo "Potential Groq API key detected in repository content."
+            exit 1
+          fi
+
       - name: Verify manifest-referenced files
         run: |
           test -f background.js
