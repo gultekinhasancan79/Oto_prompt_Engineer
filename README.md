@@ -5,6 +5,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/gultekinhasancan79/Oto_prompt_Engineer/actions/workflows/ci.yml"><img src="https://github.com/gultekinhasancan79/Oto_prompt_Engineer/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <img src="https://img.shields.io/badge/Chrome-Extension-4285F4?logo=googlechrome&logoColor=white" alt="Chrome Extension">
   <img src="https://img.shields.io/badge/Manifest-V3-34A853" alt="Manifest V3">
   <img src="https://img.shields.io/badge/Groq-API-F55036" alt="Groq API">
