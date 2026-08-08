@@ -132,9 +132,30 @@ manifest.json
 
 The extension uses Chrome Manifest V3 and keeps model calls in the background service worker rather than directly inside page scripts.
 
+## Testing
+
+The repository uses Node's built-in test runner, so pipeline tests do not require an npm dependency or additional test framework.
+
+Current automated tests exercise pure behaviour from `background.js`, including:
+
+- control-block stripping,
+- removal of common model preambles,
+- output whitespace normalization,
+- Turkish/English language detection,
+- validator rejection of model meta-text,
+- and acceptance of a clean intent-preserving rewrite.
+
+Run them locally with:
+
+```bash
+node --test tests/background_pipeline.test.js
+```
+
+GitHub Actions runs these tests together with JavaScript syntax checks, manifest validation, duplicate-key detection, a Groq-secret guard, and manifest-file integrity checks.
+
 ## Current Scope
 
-This project is intentionally lightweight and client-side. Useful next steps include automated tests for the cleaner/validator pipeline, per-site integration tests, a true automatic language mode, clearer model configuration, and packaging for the Chrome Web Store.
+This project is intentionally lightweight and client-side. Useful next steps include per-site integration tests, broader validator edge-case coverage, resolving legacy settings-key naming, making language preference behavior explicit, clearer model configuration, and packaging for the Chrome Web Store.
 
 ## License
 
